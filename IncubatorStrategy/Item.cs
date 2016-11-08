@@ -5,7 +5,7 @@ using System.Text;
 
 namespace IncubatorStrategy
 {
-    public enum ItemType { redDiamond = 0, cyanDiamond = 1, carrot, hellPlantFlower, pollen };
+    public enum ItemType { redDiamond = 0, cyanDiamond = 1, carrot, hellFlower };
 
     class Item: IUri
     {
@@ -23,8 +23,8 @@ namespace IncubatorStrategy
                     case ItemType.redDiamond: { PictureUri = new Uri("pack://application:,,,/Images/redDiamond.png"); IsCurrency = true; Quantity = 0; return; }
                     case ItemType.cyanDiamond: { PictureUri = new Uri("pack://application:,,,/Images/cyanDiamond.png"); IsCurrency = true; return; }
                     case ItemType.carrot: { PictureUri = new Uri("pack://application:,,,/Images/carrot.png"); IsCurrency = false; Quantity = 0; return; }
-                    case ItemType.hellPlantFlower: { PictureUri = new Uri("pack://application:,,,/Images/hellFlower.png"); IsCurrency = false; Quantity = 0; return; }
-                    case ItemType.pollen: { PictureUri = new Uri("pack://application:,,,/Images/magicLiquid.png"); IsCurrency = false; Quantity = 0; return; }
+                    case ItemType.hellFlower: { PictureUri = new Uri("pack://application:,,,/Images/hellFlower.png"); IsCurrency = false; Quantity = 0; return; }
+                    //case ItemType.pollen: { PictureUri = new Uri("pack://application:,,,/Images/magicLiquid.png"); IsCurrency = false; Quantity = 0; return; }
                 }
             }
         }

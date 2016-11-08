@@ -1,17 +1,27 @@
 ﻿<Window x:Class="IncubatorStrategy.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="800" Width="940" Loaded="Window_Loaded" DataContext="{Binding}" KeyUp="Window_KeyUp" ResizeMode="NoResize" Background="Black">
+        Title="MainWindow" Height="880" Width="940" Loaded="Window_Loaded" DataContext="{Binding}" KeyUp="Window_KeyUp" ResizeMode="NoResize" Background="Black">
 
     <StackPanel>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-            <WrapPanel x:Name="itemWrapPanel" Height="32" Width="710" Background="#FFC1C1C1" Margin="10, 10, 10, 0"></WrapPanel>
-            <WrapPanel x:Name="currencyWrapPanel" Height="32" Width="160" Background="#FFC1C1C1" Margin="10, 10, 10, 0"></WrapPanel>
+            <WrapPanel x:Name="itemWrapPanel" Height="32" Width="640" Background="White" Margin="10, 10, 10, 0"></WrapPanel>
+            <WrapPanel x:Name="currencyWrapPanel" Height="32" Width="160" Background="White" Margin="10, 10, 10, 0"></WrapPanel>
         </StackPanel>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <WrapPanel x:Name="factoryWrapPanel" Height="680" Width="50" Background="#FFC1C1C1" Margin="10, 10, 10, 10"></WrapPanel>
-            <WrapPanel x:Name="sectionGrid" Height="680" Width="640" Background="#FFC1C1C1" Margin="10, 10, 10, 10"></WrapPanel>
-            <WrapPanel x:Name="creatureWrapPanel" Height="680" Width="160" Background="#FFC1C1C1" Margin="10, 10, 10, 10"></WrapPanel>
+            <WrapPanel x:Name="sectionGrid" Height="680" Width="640" Background="Black" Margin="10, 10, 10, 10">
+            </WrapPanel>
+            <WrapPanel x:Name="creatureWrapPanel" Height="680" Width="160" Background="Black" Margin="10, 10, 10, 10"></WrapPanel>
         </StackPanel>
+            <StackPanel>
+                <TabControl Name="shopTabControl">
+                    <TabItem Header="Plant sections" Name="plantSectionsTabItem">
+                        <StackPanel Name="plantSectionsStackPanelTabItem" Orientation="Horizontal"></StackPanel>
+                    </TabItem>
+                    <TabItem Header="Animal sections" Name="animalSectionsTabItem">
+                        <StackPanel Name="animalSectionsStackPanelTabItem" Orientation="Horizontal"></StackPanel>
+                    </TabItem>
+                </TabControl>
+            </StackPanel>
     </StackPanel>
 </Window>

@@ -19,13 +19,13 @@ namespace IncubatorStrategy
     public partial class ShopWindow : Window
     {
         Game game;
-        Dictionary<CreatureType,StackPanel> stackPanelDictionaryForSections;
+        Dictionary<PlantCreatureType,StackPanel> stackPanelDictionaryForSections;
 
         internal ShopWindow(ref Game game)
         {
             InitializeComponent();
             this.game = game;
-            stackPanelDictionaryForSections = new Dictionary<CreatureType, StackPanel>();
+            stackPanelDictionaryForSections = new Dictionary<PlantCreatureType, StackPanel>();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)

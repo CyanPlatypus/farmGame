@@ -27,9 +27,9 @@ namespace IncubatorStrategy
                 status = value;
                 switch (status) 
                 {
-                    case WorkingStatus.on: { picture = pictureUriOn; return; }
-                    case WorkingStatus.off: { picture = pictureUriOff; return; }
-                    case WorkingStatus.broken: { picture = pictureUriBroken; return; }
+                    case WorkingStatus.on: { picture = pictureUriOn; isNotBroken = true; return; }
+                    case WorkingStatus.off: { picture = pictureUriOff; isNotBroken = true; return; }
+                    case WorkingStatus.broken: { picture = pictureUriBroken; isNotBroken = false; return; }
                 }
             }
         }
@@ -37,7 +37,7 @@ namespace IncubatorStrategy
         public bool IsNotBroken 
         {
             get { return isNotBroken; }
-            set 
+            protected set 
             {
                 isNotBroken = value;
                 //if (IsNotBroken)
@@ -73,7 +73,7 @@ namespace IncubatorStrategy
             pictureUriOff = new Uri("pack://application:,,,/Images/" + picOff);
             pictureUriBroken = new Uri("pack://application:,,,/Images/" + picBroken);
             if ((percentage <= 0) || (percentage >= 100))
-                percentage = rnd.Next(3, 8); //not such a bad chance
+                percentage = rnd.Next(2, 5); //not such a bad chance
             PercentageOfBreaking = percentage;
             picture = new Uri("pack://application:,,,/Images/" + picOff);
             status = WorkingStatus.off;
@@ -95,13 +95,13 @@ namespace IncubatorStrategy
             return PictureUri;
         }
 
-        public int pubVarRandV = 0;
+        //public int pubVarRandV = 0;
 
         public void Action()
         {
             if (status == WorkingStatus.on)
             {
-                pubVarRandV = rnd.Next(1, 101);
+                int pubVarRandV = rnd.Next(1, 101);
                 if (pubVarRandV <= PercentageOfBreaking)
                 {
                     IsNotBroken = false;

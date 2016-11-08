@@ -18,24 +18,28 @@ namespace IncubatorStrategy
 
     class Game
     {
-        //кол-во Секций расчитывается из размера поля, которое передаётся в конструкторе
+        public Dictionary<int, PlantSection> PlantSectionDictionary { get; protected set; }
 
-        public Dictionary<int, Section> SectionDictionary { get; protected set; }
+        public Dictionary<int, AnimalSection> AnimalSectionDictionary { get; protected set; }
 
         public List<Item> ItemsList { get; protected set; }
 
         public List<Item> CurrencyList { get; protected set; }
 
-        public int SectionQuantity { get; protected set; }
+        public int PlantSectionQuantity { get; protected set; }
 
-        public Game(int sectionQuantity)
+        public int AnimalSectionQuantity { get; protected set; }
+
+        public Game(int plantSectionQuantity, int animalSectionQuantity)
         {
-            SectionDictionary = new Dictionary<int,Section>();
+            PlantSectionDictionary = new Dictionary<int,PlantSection>();
+            AnimalSectionDictionary = new Dictionary<int, AnimalSection>();
 
             CurrencyList = new List<Item>();
             ItemsList = new List<Item>();
 
-            SectionQuantity = sectionQuantity;
+            PlantSectionQuantity = plantSectionQuantity;
+            AnimalSectionQuantity = animalSectionQuantity;
 
             SetItemsAndCurrencyLists();
         }
@@ -52,62 +56,190 @@ namespace IncubatorStrategy
             }
         }
 
-        public int Add(CreatureType type) 
+        public int AddPlantSection(PlantCreatureType type) 
         {
-            for (int i = 0; i < SectionQuantity; i++) 
+            for (int i = 0; i < PlantSectionQuantity; i++) 
             {
-                if (!SectionDictionary.ContainsKey(i)) 
+                if (!PlantSectionDictionary.ContainsKey(i)) 
                 {
-                    SectionDictionary.Add(i, new Section(type));
-                    return i;
+                    foreach (var c in CurrencyList)
+                    {
+                        if (c.Type == FunctionsAndConstants.buyingPlantSectionPrise[type].Item2 &&
+                            c.CanAffordBuying(FunctionsAndConstants.buyingPlantSectionPrise[type].Item1))
+                        {
+                            c.ReduceQuantity(FunctionsAndConstants.buyingPlantSectionPrise[type].Item1);
+
+                            PlantSectionDictionary.Add(i, new PlantSection(type));
+                            return i;
+                        }
+                    }
+                    
                 }
             }
             return -1;
         }
 
-        public void AddCreatureIntoSection(int sectionIndex, Point point) 
+        public int AddAnimalSection(AnimalCreatureType type)
         {
-            if (SectionDictionary.ContainsKey(sectionIndex)) //if section with this number exists
+            for (int i = 0; i < AnimalSectionQuantity; i++)
             {
-                foreach(var c in CurrencyList) //for all currency check
+                if (!AnimalSectionDictionary.ContainsKey(i))
                 {
-                    //if it's type equals the type of currency we're spending on bying this creature
-                    if (c.Type == FunctionsAndConstants.buyingCreaturePrise[SectionDictionary[sectionIndex].CreatureType].Item2)
+                    foreach (var c in CurrencyList)
                     {
-                        //if we can afford to buy this creature and..
-                        if (c.CanAffordBuying(FunctionsAndConstants.buyingCreaturePrise[SectionDictionary[sectionIndex].CreatureType].Item1) &&
-                            SectionDictionary[sectionIndex].Add(point)) //..we found a place for it (and placed it)
-                            c.ReduceQuantity(FunctionsAndConstants.buyingCreaturePrise[SectionDictionary[sectionIndex].CreatureType].Item1); //reduse the quantity of this currency
-                        return;
+                        if (c.Type == FunctionsAndConstants.buyingAnimalSectionPrise[type].Item2 &&
+                            c.CanAffordBuying(FunctionsAndConstants.buyingAnimalSectionPrise[type].Item1))
+                        {
+                            c.ReduceQuantity(FunctionsAndConstants.buyingAnimalSectionPrise[type].Item1);
+
+                            AnimalSection aS = new AnimalSection(type);
+                            aS.CreatureNeedsFood += GiveFoodToAnimalCreature;
+                            AnimalSectionDictionary.Add(i, aS);
+                            return i;
+                        }
                     }
                 }
             }
+            return -1;
+        }
+
+        bool GiveFoodToAnimalCreature(object sender, FoodEventArgs e)
+        {
+            foreach (var i in ItemsList)
+            {
+                if (i.Type == e.FoodType && i.CanAffordBuying(e.Quantity))
+                {
+                    i.ReduceQuantity(e.Quantity);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public void AddCreatureIntoSection(string sectionType, int sectionIndex, Point point) 
+        {
+            switch (sectionType) 
+            {
+                case "a": 
+                    {
+                        if (AnimalSectionDictionary.ContainsKey(sectionIndex)) //if section with this number exists
+                        {
+                            foreach (var c in CurrencyList) //for all currency check
+                            {
+                                //if it's type equals the type of currency we're spending on bying this creature
+                                if (c.Type == FunctionsAndConstants.buyingAnimalCreaturePrise[AnimalSectionDictionary[sectionIndex].CreatureType].Item2)
+                                {
+                                    //if we can afford to buy this creature and..
+                                    if (c.CanAffordBuying(FunctionsAndConstants.buyingAnimalCreaturePrise[AnimalSectionDictionary[sectionIndex].CreatureType].Item1) &&
+                                        AnimalSectionDictionary[sectionIndex].Add(point)) //..we found a place for it (and placed it)
+                                        c.ReduceQuantity(FunctionsAndConstants.buyingAnimalCreaturePrise[AnimalSectionDictionary[sectionIndex].CreatureType].Item1); //reduse the quantity of this currency
+                                    return;
+                                }
+                            }
+                        }
+                        break;
+                    }
+                case "p":
+                    {
+                        if (PlantSectionDictionary.ContainsKey(sectionIndex)) //if section with this number exists
+                        {
+                            foreach (var c in CurrencyList) //for all currency check
+                            {
+                                //if it's type equals the type of currency we're spending on bying this creature
+                                if (c.Type == FunctionsAndConstants.buyingPlantCreaturePrise[PlantSectionDictionary[sectionIndex].CreatureType].Item2)
+                                {
+                                    //if we can afford to buy this creature and..
+                                    if (c.CanAffordBuying(FunctionsAndConstants.buyingPlantCreaturePrise[PlantSectionDictionary[sectionIndex].CreatureType].Item1) &&
+                                        PlantSectionDictionary[sectionIndex].Add(point)) //..we found a place for it (and placed it)
+                                        c.ReduceQuantity(FunctionsAndConstants.buyingPlantCreaturePrise[PlantSectionDictionary[sectionIndex].CreatureType].Item1); //reduse the quantity of this currency
+                                    return;
+                                }
+                            }
+                        }
+                        break;
+                    }
+            }
+            //if (PlantSectionDictionary.ContainsKey(sectionIndex)) //if section with this number exists
+            //{
+            //    foreach (var c in CurrencyList) //for all currency check
+            //    {
+            //        //if it's type equals the type of currency we're spending on bying this creature
+            //        if (c.Type == FunctionsAndConstants.buyingPlantCreaturePrise[PlantSectionDictionary[sectionIndex].CreatureType].Item2)
+            //        {
+            //            //if we can afford to buy this creature and..
+            //            if (c.CanAffordBuying(FunctionsAndConstants.buyingPlantCreaturePrise[PlantSectionDictionary[sectionIndex].CreatureType].Item1) &&
+            //                PlantSectionDictionary[sectionIndex].Add(point)) //..we found a place for it (and placed it)
+            //                c.ReduceQuantity(FunctionsAndConstants.buyingPlantCreaturePrise[PlantSectionDictionary[sectionIndex].CreatureType].Item1); //reduse the quantity of this currency
+            //            return;
+            //        }
+            //    }
+            //}
         }
 
         public void Delete(int sectionNumber) 
         {
-            if (SectionDictionary.ContainsKey(sectionNumber))
-                SectionDictionary.Remove(sectionNumber);
+            if (PlantSectionDictionary.ContainsKey(sectionNumber))
+                PlantSectionDictionary.Remove(sectionNumber);
         }
 
         public void Action()
         {
-            foreach (var section in SectionDictionary.Values)
+            foreach (var section in PlantSectionDictionary.Values)
+            {
+                section.Action();
+            }
+            foreach (var section in AnimalSectionDictionary.Values)
             {
                 section.Action();
             }
         }
 
-        public void SellAllAdultCreaturesInSection(int sectionIndex) 
+        public void FixEquipment(int index, Point point) 
+        {
+            foreach (var c in CurrencyList) 
+            {
+                if ((c.Type == FunctionsAndConstants.fixinEquipmentPrise[PlantSectionDictionary[index].CreatureType].Item2) &&
+                    (c.CanAffordBuying(FunctionsAndConstants.fixinEquipmentPrise[PlantSectionDictionary[index].CreatureType].Item1)) &&
+                    PlantSectionDictionary[index].FixEquipment(point))
+                {
+                    c.ReduceQuantity(FunctionsAndConstants.fixinEquipmentPrise[PlantSectionDictionary[index].CreatureType].Item1);
+                }
+                    
+            }
+        }
+
+        public void SellAllAdultCreaturesInSection(string sectionType, int sectionIndex) 
         {
             int pointsEarned = 0;
-            ItemType t = SectionDictionary[sectionIndex].SellAllAdultCreatures(ref pointsEarned);
+            ItemType t = PlantSectionDictionary[sectionIndex].SellAllAdultCreatures(ref pointsEarned);
+            if (sectionType == "a")
+                t = AnimalSectionDictionary[sectionIndex].SellAllAdultCreatures(ref pointsEarned);
 
             foreach (var i in CurrencyList)
             {
                 if (i.Type == t)
                     i.IncreaseQuantity(pointsEarned);
             }
+        }
+
+        public void CollectAllAdultCreaturesInSection(int sectionIndex)
+        {
+            int pointsEarned = 0;
+            ItemType t = PlantSectionDictionary[sectionIndex].CollectAllAdultCreatures(ref pointsEarned);
+
+            foreach (var i in ItemsList)
+            {
+                if (i.Type == t)
+                    i.IncreaseQuantity(pointsEarned);
+            }
+        }
+
+        public void RemoveAllCorpses(string sectionType, int sectionIndex) 
+        {
+            if (sectionType == "p")
+                PlantSectionDictionary[sectionIndex].RemoveAllDeadCreatures();
+            if (sectionType == "a")
+                AnimalSectionDictionary[sectionIndex].RemoveAllDeadCreatures();
         }
     }
 }

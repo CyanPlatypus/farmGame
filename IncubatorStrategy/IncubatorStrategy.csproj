@@ -148,13 +148,38 @@
     <Resource Include="Images\magicLiquid.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\carrot.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\hellFlower.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\cyanDiamond.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\carrot.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\hellPlantBig.png" />
+    <Resource Include="Images\hellPlantMedium.png" />
+    <Resource Include="Images\hellPlantSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\carrotPlantBig.png" />
+    <Resource Include="Images\carrotPlantDead.png" />
+    <Resource Include="Images\carrotPlantMedium.png" />
+    <Resource Include="Images\carrotPlantSmall.png" />
+    <Resource Include="Images\gardenFanOn.png" />
+    <Resource Include="Images\gardenFloor.png" />
+    <Resource Include="Images\gardenLampOff.png" />
+    <Resource Include="Images\gardenLampOn.png" />
+    <Resource Include="Images\gardenWall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\rabbitBig.png" />
+    <Resource Include="Images\rabbitDead.png" />
+    <Resource Include="Images\rabbitMedium.png" />
+    <Resource Include="Images\rabbitSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\gardenWetFloor.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
